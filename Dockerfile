@@ -1,17 +1,13 @@
-# Utiliser l'image officielle PHP avec Apache
-FROM php:8.1-apache
+# Utiliser une image officielle PHP 8.3 avec Apache
+FROM php:8.3-apache
 
-# Installer les extensions PHP nécessaires pour Symfony + PostgreSQL
+# Installer les extensions nécessaires
 RUN apt-get update && apt-get install -y \
     libicu-dev \
     libzip-dev \
     unzip \
     git \
-    curl \
-    gnupg \
     libpq-dev \
-    nodejs \
-    npm \
     && docker-php-ext-install intl pdo pdo_pgsql zip opcache \
     && a2enmod rewrite
 
@@ -21,16 +17,17 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Définir le répertoire de travail
 WORKDIR /var/www/html
 
-# Copier les fichiers de l'application dans le conteneur
+# Copier les fichiers de l'application
 COPY . .
 
 # Installer les dépendances PHP
 RUN composer install --no-dev --optimize-autoloader
 
-# Installer Yarn (recommandé pour Tailwind/Encore) et les packages front
-RUN npm install -g yarn && yarn install && yarn build
+# Installer Yarn + packages front
+RUN curl -sS https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs && npm install -g yarn && yarn && yarn build
 
-# Donner les bonnes permissions
+# Permissions Symfony
 RUN chown -R www-data:www-data var public
 
 # Exposer le port 80
