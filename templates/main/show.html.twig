@@ -1,0 +1,407 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+
+
+	<div class="relative">
+		<div class="absolute top-14 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+			<a href="{{ path('shipment_update', { id: shipment.id }) }}" class="bg-gray-800 hover:bg-gray-900 text-white py-2 px-4 rounded-lg font-semibold transition duration-300">
+				Update
+			</a>
+			<a href="{{ path('shipment_pdf', { id: shipment.id }) }}" class="bg-gray-800 hover:bg-gray-900 text-white py-2 px-4 rounded-lg font-semibold transition duration-300 ml-4">
+				Print-PDF
+			</a>
+		</div>
+	</div>
+
+
+	<!--  mon 2eme grand div -->
+	<div class="flex justify-center items-center min-h-screen min-w-full p-2">
+		<div class="bg-white   mx-auto ">
+			<div
+				class="w-full border border-gray-400">
+				<!-- Section 1 : Expéditeur -->
+				<div class="grid grid-cols-2 border border-black h-24">
+					<div class="border-r border-black">
+						<p class="text-xs-custom">1 - Expéditeur (Nom, Adresse, Pays)</p>
+						<p class="text-xs-custom">Sender (Name, Address, Country)</p>
+						<p class="text-2xl text-center">{{ shipment.company.name }}</p>
+					</div>
+					<div class="p-3">
+						<p class="text-sm font-semibold text-center">LETTRE DE VOITURE INTERNATIONALE</p>
+						<p class="text-center text-xl font-bold">CMR</p>
+					</div>
+				</div>
+				<!-- Section 2 : Destinataire -->
+				<div class="grid grid-cols-2 border border-black h-24 border-b-0">
+					<div class="border-r border-b-2 border-black">
+						<p class="text-xs-custom">2 - Destinataire (Nom, Adresse, Pays)</p>
+						<p class="text-xs-custom">Consigne (Name, Address, Country)</p>
+						<p class="text-2xl text-center">{{ shipment.consigne.name }}</p>
+					</div>
+					<div class="border-black">
+						<p class="text-xs-custom">16 - Transporteur (nom,adress,pays)</p>
+						<p class="text-xs-custom">carrer (name, address, country)</p>
+
+						<p class="text-xs font-bold text-center">
+							{{ shipment.transporteur.name}}</p>
+						<p class="text-xs font-bold text-center">
+							{{ shipment.transporteur.address}}</p>
+						<p class="text-xs font-bold text-center">
+							{{ shipment.transporteur.country}}</p>
+
+
+					</div>
+				</div>
+				<!-- Section 3 : Lieu prévue pour la livraison -->
+				<div class="grid grid-cols-2 border border-black h-24 border-t-0">
+					<div class="border-black">
+						<p class="text-xs-custom">3 - Lieu prévue pour la livraison (Lieu, Pays)</p>
+						<p class="text-xs-custom">Place of delivery of the goods (place, Country)</p>
+						<p class="text-center text-xl font-bold">{{shipment.consigne.address}}</p>
+					</div>
+					<div class="border-l border-black">
+						<p class="text-xs-custom">17 - Transporteur successifs (nom, adress, pays)</p>
+						<p class="text-xs-custom">Successive carriers (name, address, country)</p>
+					</div>
+				</div>
+				<!-- Section 4 : Informations sur le Transport -->
+				<div class="grid grid-cols-2 border border-black h-24 border-b-0">
+					<div class="border-r border-black">
+						<p class="text-xs-custom">4 - Lieu et date de la prise en charge de la marchandise (Lieu, Pays,
+													date)</p>
+						<p class="text-xs-custom">Place and date of taking over the goods (place, country, date)</p>
+						<p class="text-center text-xl font-bold">{{shipment.loadingLocation.place}}</p>
+
+					</div>
+					<div class="border-b-0">
+						<p class="text-xs-custom">18 - Reserves et observations du transporteur</p>
+						<p class="text-xs-custom">Carriers reservations and observations</p>
+
+
+					</div>
+				</div>
+				<!-- Section 5 : Documents annexés -->
+				<div class="grid grid-cols-2 border border-black h-24 border-t-0">
+					<div class="border-r border-t-2 border-black">
+						<p class="text-xs-custom">5 - Documents annexés</p>
+						<p class="text-xs-custom">Documents attached</p>
+						<p class="text-xs font-bold text-center">
+							Heure d'arriver:
+							{{ shipment.arrivalTime ? shipment.arrivalTime|date('H:i') : 'N/A' }}
+						</p>
+						<p class="text-xs font-bold text-center">
+							Heure de départ:
+							{{ shipment.departureTime ? shipment.departureTime|date('H:i') : 'N/A' }}
+						</p>
+
+
+					</div>
+					<div class="border-t-0"></div>
+				</div>
+				<div
+					class="grid grid-rows-[85%_15%] border border-black h-[150px]">
+					<!-- Première ligne avec 2 colonnes -->
+					<div
+						class="grid grid-cols-[60%_40%]">
+						<!-- Cellule 6 -->
+						<div class="border-r border-black  grid grid-cols-4">
+							<div>
+								<p class="text-xs-custom">6-Marque et numero</p>
+								<p class="text-xs-custom">Documents attached</p>
+								<p class="text-xs font-bold pt-2 ">
+									{{shipment.trailerPlate}}</p>
+
+							</div>
+							<div>
+								<p class="text-xs-custom">7-Nombre de colis</p>
+								<p class="text-xs-custom">Number of packages</p>
+								<p class="text-xs font-bold pt-2  text-center">
+									{% if shipment.TypeLoading.id == 1 %}
+										{{shipment.quantity}}</p>
+								{% else %}
+									{{shipment.nombrePalette}}</p>
+							{% endif %}
+						</div>
+						<div>
+							<p class="text-xs-custom">8-Mode d'emballage</p>
+							<p class="text-xs-custom">Method of packing</p>
+
+							{% if shipment.TypeLoading.id == 1 %}
+								<p class="text-xs font-bold pt-2">Collis/Parcel</p>
+							{% else %}
+								<p class="text-xs font-bold pt-2">Palettes/Items</p>
+							{% endif %}
+
+						</div>
+						<div>
+							<p class="text-xs-custom">9-Nature de la Marchandise</p>
+							<p class="text-xs-custom">Nature of the goods</p>
+
+							<p class="text-xs font-bold  ">
+								Mixed
+								<br>(Shoes/Textile)
+							</p>
+
+						</div>
+					</div>
+
+					<!-- Colonnes à droite -->
+					<div class="grid grid-cols-3 w-full">
+						<div class="border-r border-black">
+							<p class="text-xs-custom">10-No Statistique</p>
+							<p class="text-xs-custom pl-1">Statiscal number</p>
+
+						</div>
+						<div class="border-r border-black">
+							<p class="text-xs-custom">11-Poids brut kg</p>
+							<p class="text-xs-custom">
+								Gross weight in kg</p>
+						</div>
+						<div>
+							<p class="text-xs-custom">Cubage m^3</p>
+							<p class="text-xs-custom">Volume in m^3</p>
+						</div>
+					</div>
+				</div>
+				<!-- Deuxième ligne : sans bordure en haut -->
+				<div
+					class="grid grid-cols-[60%_40%] w-full border-black">
+					<!-- Première cellule -->
+					<div class="border-r border-t border-black grid grid-cols-4">
+						<div>
+							<p class="text-xs-custom">Classe</p>
+							<p class="text-xs-custom">Class</p>
+						</div>
+						<div>
+							<p class="text-xs-custom">chiffre</p>
+							<p class="text-xs-custom">Number</p>
+						</div>
+						<div>
+							<p class="text-xs-custom">Lettre</p>
+							<p class="text-xs-custom">Letter</p>
+						</div>
+						<div>
+							<p class="text-xs-custom">(ADR*)</p>
+
+						</div>
+
+					</div>
+					<!-- Deuxième cellule -->
+					<div class="border-black grid grid-cols-3 w-full">
+						<div class="border-r border-black">
+							<p class="text-xs-custom"></p>
+						</div>
+						<div class="border-r border-black">
+							<p class="text-xs-custom"></p>
+						</div>
+						<div>
+							<p class="text-xs-custom"></p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="grid grid-cols-2 border border-black border-b-0   h-[250px]">
+				<div class="border-r border-b border-black grid grid-rows-[60%_25%_15%]">
+					<div class=" border-black border-b relative">
+						<p class="text-xs-custom">13-Instructions de l'expediteur</p>
+						<p class="text-xs-custom">
+							Sender's Instructions</p>
+						<p class="text-xs font-bold text-center">Reference:
+							{{shipment.numberReference}}</p>
+						<p class="text-xs font-bold text-center ">Plomb:
+							{{shipment.sealNumber}}</p>
+						<p class="text-xs font-bold text-center ">Tour Number:
+							{{shipment.tourNumber}}</p>
+						<p class="text-xs font-bold text-center ">Tractor:
+							{{shipment.tractorPlate}}</p>
+						<p class="text-xs font-bold text-center ">Trailer:
+							{{shipment.trailerPlate}}</p>
+						<p class="text-xs  text-center absolute bottom-0 left-20 right-20 ">
+							{{shipment.TypeLoading.name}}
+						</p>
+					</div>
+					<div class="border-black border-b">
+						<div class=" border-black grid grid-rows-3 ">
+							<div>
+								<p class="text-xs-custom">14 Prescriptions d'affranchissement
+								</p>
+								<p class="text-xs-custom">
+									Instructions as to payment for carriage</p>
+							</div>
+							<div class="w-[10px] h-[10px] border border-black  relative ">
+								<p class="text-xs-custom absolute left-4  w-full">
+									Franco/Carriage paid</p>
+							</div>
+							<div class="w-[10px] h-[10px] border border-black   ">
+								<p class="text-xs-custom">
+									Non franco/Carriage forward</p>
+							</div>
+						</div>
+					</div>
+					<div class="border-black grid grid-cols-3">
+						<div>
+							<p class="text-xs-custom">21 Etabli à</p>
+							<p class="text-xs-custom  my-1">Established in</p>
+						</div>
+						<div class="grid grid-rows-2 relative  ">
+							<p class="text-xs-custom absolute left-20 ">
+								Le</p>
+							<p class="text-xs-custom absolute  left-20  my-4">
+								On</p>
+						</div>
+					</div>
+				</div>
+				<div class="border-black grid grid-rows-[20%_70%_10%]">
+					<div class=" border-black border-b ">
+						<p class="text-xs-custom">19-Conventions particulieres</p>
+						<p class="text-xs-custom  pl-1">
+							Special agreements
+						</p>
+					</div>
+					<div class=" border-black border-b grid grid-cols-4">
+						<div class="border-black border-r grid grid-rows-[15%_30%_45%_10%]">
+							<div class="border-black border-b">
+								<p class="text-xs-custom">20 A payer par
+								</p>
+								<p class="text-xs-custom pl-1 ">To be paid by
+								</p>
+							</div>
+							<div class="border-black border-b grid grid-rows-2">
+								<div>
+									<p class="text-xs-custom">
+										Prix de transport
+									</p>
+									<p class="text-xs-custom">
+										Carriage charges</p>
+								</div>
+								<div>
+									<p class="text-xs-custom mb-0">Reductions</p>
+									<p class="text-xs-custom">Deductions</p>
+								</div>
+
+							</div>
+							<div class="border-black border-b grid grid-rows-[20%_40%_40%] ">
+								<div>
+									<p class="text-xs-custom ">Solde/Balance</p>
+
+								</div>
+								<div class="mb-0">
+									<p class="text-xs-custom ">Supplements</p>
+									<p class="text-xs-custom ">Supplem.charges:
+									</p>
+								</div>
+								<div class="mt-0">
+									<p class="text-xs-custom ">Frais accessoires</p>
+									<p class="text-xs-custom ">Other charges:
+									</p>
+								</div>
+							</div>
+							<div class="border-black ">
+								<p class="text-xs-custom ">
+									Total</p>
+							</div>
+						</div>
+						<div class="border-black border-r grid grid-rows-[15%_30%_45%_10%]">
+							<div class="border-black border-b ">
+								<p class="text-xs-custom">
+									Expediteur
+								</p>
+								<p class="text-xs-custom">
+									Sender
+								</p>
+							</div>
+							<div class="border-black border-b grid grid-cols-2">
+								<div class="border-black border-r"></div>
+							</div>
+							<div class="border-black border-b grid grid-cols-2">
+								<div class=" border-black border-r"></div>
+							</div>
+							<div class="border-black grid grid-cols-2 ">
+								<div class=" border-black border-r"></div>
+							</div>
+						</div>
+						<div class="border-black border-r  grid grid-rows-[15%_30%_45%_10%]">
+							<div class="border-black border-b">
+								<p class="text-xs-custom">
+									Monnaie/Currency
+								</p>
+							</div>
+							<div class="border-black border-b grid grid-cols-2">
+								<div class="border-black border-r"></div>
+							</div>
+							<div class="border-black border-b grid grid-cols-2">
+								<div class="border-black border-r"></div>
+							</div>
+							<div class="border-black grid grid-cols-2">
+								<div class="border-black border-r"></div>
+							</div>
+						</div>
+						<div class="border-black border-r grid grid-rows-[15%_30%_45%_10%]">
+							<div class="border-black border-b">
+								<p class="text-xs-custom">Destinataire</p>
+								<p class="text-xs-custom">Consigne</p>
+							</div>
+							<div class="border-black border-b grid grid-cols-2">
+								<div class="border-black border-r"></div>
+							</div>
+							<div class="border-black border-b grid grid-cols-2">
+								<div class="border-black border-r"></div>
+							</div>
+							<div class="border-black grid grid-cols-2">
+								<div class="border-black border-r"></div>
+							</div>
+						</div>
+					</div>
+					<div class=" border-black border-b">
+						<p class="text-xs-custom">15- Remboursement/Cash on delivery</p>
+					</div>
+				</div>
+			</div>
+			<div class=" grid grid-cols-3 border-black h-[110px]">
+				<div class="border-black border-r relative">
+					<p class="text-xs-custom">22</p>
+					<p class="absolute bottom-0 left-0 text-xs-custom ml-2">
+						Signature et timbre de l'expediteur
+						<br>
+						Signature and of the sender
+					</p>
+				</div>
+
+				<div class="border-black border-r relative">
+					<p class="text-xs-custom">23</p>
+					<p class="absolute bottom-0 left-0 text-xs-custom ml-2">
+						Signature et timbre du transporteur
+						<br>
+						Signature and of the carrier
+					</p>
+				</div>
+				<div class="border-black border-r   grid grid-rows-3  mt-0 relative ">
+					<div>
+						<p class="text-xs-custom">
+							24 Marchandises reçues/Goods received
+						</p>
+					</div>
+					<div class="text-xs-custom grid grid-cols-3">
+						<div class="text-center">
+							<p>Lieu</p>
+							<p>Place</p>
+						</div>
+						<div class=" text-center relative">
+							<p class="absolute left-14 ">Le</p>
+							<p class="absolute left-14 my-3 ">On</p>
+						</div>
+						<div class="text-center ">
+							<p class="text-xs-custom">19</p>
+						</div>
+					</div>
+					<div class="absolute bottom-0 pl-2">
+						<p class="text-xs-custom">Signature et timbre du destinataire</p>
+						<p class="text-xs-custom">Signature and stamp of the carrier</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}

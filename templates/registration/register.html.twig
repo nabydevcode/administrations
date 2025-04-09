@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register
+{% endblock %}
+
+{% block body %}
+{% for flash_error in app.flashes('verify_email_error') %}
+<div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+{% endfor %}
+
+
+<div class="max-w-md mx-auto bg-white shadow-lg rounded-lg p-6 ">
+    <h2 class="text-center font-bold text-xl"> S'inscrire</h2>
+    {{ form_start(registrationForm, {'attr': {'class': 'space-y-4'}}) }}
+
+    <!-- Email -->
+    <div>
+        <label for="{{ registrationForm.email.vars.id }}" class="block text-sm font-medium text-gray-700">
+            {{ registrationForm.email.vars.label }}
+        </label>
+        {{ form_widget(registrationForm.email, {'attr': {'class': 'w-full p-2 border border-gray-300 rounded focus:ring
+        focus:ring-blue-500'}}) }}
+        {{ form_errors(registrationForm.email) }}
+    </div>
+    <div>
+        <label for="{{ registrationForm.username.vars.id }}" class="block text-sm font-medium text-gray-700">
+            {{ registrationForm.username.vars.label }}
+        </label>
+        {{ form_widget(registrationForm.username, {'attr': {'class': 'w-full p-2 border border-gray-300 rounded
+        focus:ring
+        focus:ring-blue-500'}}) }}
+        {{ form_errors(registrationForm.username) }}
+    </div>
+
+    <!-- Password -->
+    <div>
+        <label for="{{ registrationForm.plainPassword.vars.id }}" class="block text-sm font-medium text-gray-700">
+            {{ registrationForm.plainPassword.vars.label | default('Mot de passe') }}
+        </label>
+        {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'w-full p-2 border border-gray-300 rounded
+        focus:ring focus:ring-blue-500'}}) }}
+        {{ form_errors(registrationForm.plainPassword) }}
+    </div>
+
+    <!-- Agree Terms -->
+    <div class="flex items-center space-x-2">
+        {{ form_widget(registrationForm.agreeTerms) }}
+        <label for="{{ registrationForm.agreeTerms.vars.id }}" class="text-sm text-gray-700">
+            J'accepte les termes et conditions
+        </label>
+        {{ form_errors(registrationForm.agreeTerms) }}
+    </div>
+
+    <!-- Submit Button -->
+    <div>
+        <button type="submit"
+            class="w-full bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-900 transition duration-300">
+            S'inscrire
+        </button>
+    </div>
+
+    {{ form_end(registrationForm) }}
+</div>
+
+
+{# {{ form_errors(registrationForm) }}
+
+{{ form_start(registrationForm) }}
+{{ form_row(registrationForm.email) }}
+{{ form_row(registrationForm.plainPassword, {
+label: 'Password'
+}) }}
+{{ form_row(registrationForm.agreeTerms) }}
+
+<button type="submit" class="btn">Register</button>
+{{ form_end(registrationForm) }} #}
+{% endblock %}

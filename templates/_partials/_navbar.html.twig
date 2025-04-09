@@ -1,0 +1,71 @@
+<nav class="bg-gray-900 text-white shadow-lg">
+	<div class="container mx-auto px-4">
+		<div
+			class="flex justify-between items-center h-16">
+			<!-- Logo -->
+			<div class="flex items-center">
+				<img class="h-8" src="{{ asset('images/camion.jpg') }}" alt="Logo">
+				<span class="text-lg font-semibold ml-2">MyCmrT</span>
+			</div>
+
+			<!-- Navigation Links -->
+			<div class="hidden md:flex space-x-6">
+				<a href="{{path('app_main')}}" class="hover:text-indigo-400 transition">Home</a>
+				<a href="#" class="hover:text-indigo-400 transition">Contact</a>
+				<a href="{{path('app_register')}}" class="hover:text-indigo-400 transition">M'inscrire</a>
+				{% if not app.user %}
+					<a href="{{path('app_login')}}" class="hover:text-indigo-400 transition">Me-Connecter</a>
+				{% else %}
+					<a href="{{path('app_logout')}}" class="hover:text-indigo-400 transition">Deconnecter</a>
+				{% endif %}
+
+
+			</div>
+
+			<!-- Profile Dropdown -->
+			<div class="relative hidden md:block">
+				<button id="profile-menu" class="flex items-center space-x-2 focus:outline-none">
+					{% if app.user %}
+						<img class="w-10 h-10 rounded-full" src="https://randomuser.me/api/portraits/men/32.jpg" alt="User">
+						<span class="hidden md:inline">
+
+							{{app.user.username}}
+
+						</span>
+					{% endif %}
+				</button>
+				<div id="dropdown-menu" class="hidden absolute right-0 mt-2 w-48 bg-white text-gray-700 rounded-md shadow-lg">
+					<a href="#" class="block px-4 py-2 hover:bg-gray-200">Profile</a>
+					<a href="#" class="block px-4 py-2 hover:bg-gray-200">Settings</a>
+					<a href="{{path('app_logout')}}" class="block px-4 py-2 hover:bg-gray-200">Logout</a>
+				</div>
+			</div>
+
+			<!-- Mobile Menu Button -->
+			<div class="md:hidden flex items-center">
+				<button id="mobile-menu-button" class="focus:outline-none">
+					<svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+						<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7"/>
+					</svg>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Mobile Menu -->
+	<div id="mobile-menu" class="hidden md:hidden bg-gray-800 text-white p-4">
+		<a href="#" class="block py-2 hover:text-indigo-400">Home</a>
+		<a href="#" class="block py-2 hover:text-indigo-400">About</a>
+		<a href="#" class="block py-2 hover:text-indigo-400">Services</a>
+		<a href="#" class="block py-2 hover:text-indigo-400">Contact</a>
+	</div>
+</nav>
+
+<script>
+	document.getElementById('mobile-menu-button').addEventListener('click', function () {
+document.getElementById('mobile-menu').classList.toggle('hidden');
+});
+document.getElementById('profile-menu').addEventListener('click', function () {
+document.getElementById('dropdown-menu').classList.toggle('hidden');
+});
+</script>

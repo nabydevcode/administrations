@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Hello MainController!
+{% endblock %}
+
+{% block body %}
+
+
+	<div class="h-[100px]  bg-gray-100"></div>
+
+
+	<div class="min-h-screen flex items-start justify-center bg-gray-100 pt-10 ">
+		<div class="bg-white rounded-lg shadow-xl p-8 max-w-lg w-full">
+			<h1 class="text-3xl font-bold text-center mb-6">Formulaire de Donner</h1>
+			<div class="grid grid-cols-3 gap-4">
+				<a href="{{ path('app_main_formulaire') }}" class="bg-gray-800 hover:bg-gray-900 text-white py-3 px-4 rounded-lg text-center transition">
+					Creer CMR
+				</a>
+				<a href="{{path('app_transporteur_formulaire')}}" class="bg-gray-800 hover:bg-gray-900 text-white py-3 px-4 rounded-lg text-center transition">
+					Transporteur
+				</a>
+				<a href="{{path('consigne_formulaire')}}" class="bg-gray-800 hover:bg-gray-900 text-white py-3 px-4 rounded-lg text-center transition">
+					Destinateur
+				</a>
+				<a href="{{path('app_delivery_formulaire')}}" class="bg-gray-800 hover:bg-gray-900 text-white py-3 px-4 rounded-lg text-center transition">
+					Lieu-Livraison
+				</a>
+				<a href="{{path('app_recherche')}}" class="bg-gray-800 hover:bg-gray-900 text-white py-3 px-4 rounded-lg text-center transition">
+					Rechercher
+				</a>
+				<a href="{{path('form_company')}}" class="bg-gray-800 hover:bg-gray-900 text-white py-3 px-6 rounded-lg text-center transition">
+					Expediteur
+				</a>
+				<a href="{{path('app_loading_formualaire')}}" class="bg-gray-800 hover:bg-gray-900 text-white py-3 px-6 rounded-lg text-center transition">
+					Adress chargement
+				</a>
+				<a href="{{path('app_type_loading_formulaire')}}" class="bg-gray-800 hover:bg-gray-900 text-white py-3 px-6 rounded-lg text-center transition">
+					Type de chagement
+				</a>
+			</div>
+		</div>
+	</div>
+{% endblock %}
