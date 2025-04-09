@@ -1,35 +1,42 @@
-# Utiliser une image officielle PHP 8.3 avec Apache
-FROM php:8.3-apache
+# Utiliser l'image officielle PHP avec Apache
+FROM php:8.1-apache
 
-# Installer les extensions nécessaires
+# Créer un utilisateur non-root
+RUN useradd -ms /bin/bash symfony
+
+# Installer les extensions PHP nécessaires pour Symfony + PostgreSQL
 RUN apt-get update && apt-get install -y \
     libicu-dev \
     libzip-dev \
     unzip \
     git \
-    libpq-dev \
     curl \
+    gnupg \
+    libpq-dev \
+    nodejs \
+    npm \
     && docker-php-ext-install intl pdo pdo_pgsql zip opcache \
     && a2enmod rewrite
 
 # Installer Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Définir le répertoire de travail
 WORKDIR /var/www/html
 
-# Copier les fichiers de l'application
+# Copier les fichiers de l'application dans le conteneur
 COPY . .
 
-# Installer les dépendances PHP
+# Installer les dépendances PHP en tant qu'utilisateur non-root
+USER symfony
 RUN composer install --no-dev --optimize-autoloader
 
 # Installer Yarn + packages front
-RUN curl -sS https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs && npm install -g yarn && yarn && yarn build
+RUN npm install -g yarn && yarn install && yarn build
 
-# Donner les permissions nécessaires
-RUN chown -R www-data:www-data /var/www/html /var/www/html/var /var/www/html/public
+# Revenir à l'utilisateur root pour donner les bonnes permissions
+USER root
+RUN chown -R www-data:www-data var public
 
 # Exposer le port 80
 EXPOSE 80
