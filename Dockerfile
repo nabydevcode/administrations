@@ -1,13 +1,18 @@
-# Utiliser une image officielle PHP avec Apache
+# Utiliser l'image officielle PHP avec Apache
 FROM php:8.1-apache
 
-# Installer les extensions PHP nécessaires pour Symfony
+# Installer les extensions PHP nécessaires pour Symfony + PostgreSQL
 RUN apt-get update && apt-get install -y \
     libicu-dev \
     libzip-dev \
     unzip \
     git \
-    && docker-php-ext-install intl pdo pdo_mysql zip opcache \
+    curl \
+    gnupg \
+    libpq-dev \
+    nodejs \
+    npm \
+    && docker-php-ext-install intl pdo pdo_pgsql zip opcache \
     && a2enmod rewrite
 
 # Installer Composer
@@ -19,14 +24,17 @@ WORKDIR /var/www/html
 # Copier les fichiers de l'application dans le conteneur
 COPY . .
 
-# Installer les dépendances avec Composer
+# Installer les dépendances PHP
 RUN composer install --no-dev --optimize-autoloader
 
-# Donner les permissions nécessaires
-RUN chown -R www-data:www-data /var/www/html/var /var/www/html/public
+# Installer Yarn (recommandé pour Tailwind/Encore) et les packages front
+RUN npm install -g yarn && yarn install && yarn build
+
+# Donner les bonnes permissions
+RUN chown -R www-data:www-data var public
 
 # Exposer le port 80
 EXPOSE 80
 
-# Commande par défaut pour démarrer Apache
+# Lancer Apache
 CMD ["apache2-foreground"]
