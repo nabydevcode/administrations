@@ -8,11 +8,12 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     libpq-dev \
+    curl \
     && docker-php-ext-install intl pdo pdo_pgsql zip opcache \
     && a2enmod rewrite
 
 # Installer Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # Définir le répertoire de travail
 WORKDIR /var/www/html
@@ -27,8 +28,8 @@ RUN composer install --no-dev --optimize-autoloader
 RUN curl -sS https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y nodejs && npm install -g yarn && yarn && yarn build
 
-# Permissions Symfony
-RUN chown -R www-data:www-data var public
+# Donner les permissions nécessaires
+RUN chown -R www-data:www-data /var/www/html /var/www/html/var /var/www/html/public
 
 # Exposer le port 80
 EXPOSE 80
