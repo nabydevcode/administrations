@@ -33,6 +33,9 @@ RUN composer install --no-dev --optimize-autoloader
 # (Optionnel) Installer Yarn et compiler les assets front-end
 RUN npm install -g yarn && yarn install && yarn build
 
+# Créer les dossiers 'var' et 'public' s'ils n'existent pas déjà
+RUN mkdir -p var public
+
 # Donner les permissions nécessaires
 RUN chown -R www-data:www-data var public
 
