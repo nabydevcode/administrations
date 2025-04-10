@@ -1,5 +1,5 @@
-# Utiliser l'image officielle PHP avec Apache
-FROM php:8.1-apache
+# Utiliser l'image officielle PHP 8.2 avec Apache
+FROM php:8.2-apache
 
 # Installer les dépendances système nécessaires
 RUN apt-get update && apt-get install -y \
@@ -24,13 +24,13 @@ WORKDIR /var/www/html
 # Copier les fichiers de l'application dans le conteneur
 COPY . .
 
-# Créer un dummy pour symfony-cmd pour éviter l'erreur
+# (Optionnel) Si tu avais ajouté un dummy pour symfony-cmd, tu peux le conserver si besoin
 RUN echo -e "#!/bin/sh\nexit 0" > /usr/local/bin/symfony-cmd && chmod +x /usr/local/bin/symfony-cmd
 
-# Installer les dépendances PHP (avec scripts activés)
+# Installer les dépendances PHP avec Composer
 RUN composer install --no-dev --optimize-autoloader
 
-# (Optionnel) Installer Yarn et compiler les assets Front-end
+# (Optionnel) Installer Yarn et compiler les assets front-end
 RUN npm install -g yarn && yarn install && yarn build
 
 # Donner les permissions nécessaires
