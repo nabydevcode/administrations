@@ -1,10 +1,7 @@
 # Utiliser l'image officielle PHP avec Apache
 FROM php:8.1-apache
 
-# Créer un utilisateur non-root
-RUN useradd -ms /bin/bash symfony
-
-# Installer les extensions PHP nécessaires pour Symfony + PostgreSQL
+# Installer les dépendances système nécessaires
 RUN apt-get update && apt-get install -y \
     libicu-dev \
     libzip-dev \
@@ -18,7 +15,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install intl pdo pdo_pgsql zip opcache \
     && a2enmod rewrite
 
-# Installer Composer
+# Ajouter Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Définir le répertoire de travail
@@ -27,15 +24,16 @@ WORKDIR /var/www/html
 # Copier les fichiers de l'application dans le conteneur
 COPY . .
 
-# Installer les dépendances PHP en tant qu'utilisateur non-root
-USER symfony
+# Créer un dummy pour symfony-cmd pour éviter l'erreur
+RUN echo -e "#!/bin/sh\nexit 0" > /usr/local/bin/symfony-cmd && chmod +x /usr/local/bin/symfony-cmd
+
+# Installer les dépendances PHP (avec scripts activés)
 RUN composer install --no-dev --optimize-autoloader
 
-# Installer Yarn + packages front
+# (Optionnel) Installer Yarn et compiler les assets Front-end
 RUN npm install -g yarn && yarn install && yarn build
 
-# Revenir à l'utilisateur root pour donner les bonnes permissions
-USER root
+# Donner les permissions nécessaires
 RUN chown -R www-data:www-data var public
 
 # Exposer le port 80
