@@ -15,9 +15,6 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install intl pdo pdo_pgsql zip opcache \
     && a2enmod rewrite
 
-# Copier la configuration Apache personnalisée
-COPY docker/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
-
 # Ajouter Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
