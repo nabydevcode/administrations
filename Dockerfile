@@ -18,6 +18,8 @@ RUN apt-get update && apt-get install -y \
 # Copier la configuration Apache personnalisée
 # Assure-toi que le fichier docker/apache/000-default.conf est présent dans ton projet
 COPY docker/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
+# Activer le module rewrite
+RUN a2enmod rewrite
 
 # Ajouter Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
