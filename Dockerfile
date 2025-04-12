@@ -15,6 +15,10 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install intl pdo pdo_pgsql zip opcache \
     && a2enmod rewrite
 
+# Copier la configuration Apache personnalisée
+# Assure-toi que le fichier docker/apache/000-default.conf est présent dans ton projet
+COPY docker/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
+
 # Ajouter Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -24,7 +28,7 @@ WORKDIR /var/www/html
 # Copier les fichiers de l'application dans le conteneur
 COPY . .
 
-# (Optionnel) Si tu avais ajouté un dummy pour symfony-cmd, tu peux le conserver si besoin
+# (Optionnel) Dummy pour symfony-cmd
 RUN echo -e "#!/bin/sh\nexit 0" > /usr/local/bin/symfony-cmd && chmod +x /usr/local/bin/symfony-cmd
 
 # Installer les dépendances PHP avec Composer
