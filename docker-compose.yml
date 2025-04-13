@@ -16,7 +16,7 @@ services:
     build:
       context: .
     volumes:
-      - .:/var/www/html/vendor
+      - .:/var/www/html
 
   database:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
