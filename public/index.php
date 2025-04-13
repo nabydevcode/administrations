@@ -1,7 +1,7 @@
 <?php
 
 use App\Kernel;
-var_dump(dirname(__DIR__) . '/vendor/autoload_runtime.php');
+
 require_once dirname(__DIR__) . '/vendor/autoload_runtime.php';
 
 
