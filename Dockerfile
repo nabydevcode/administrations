@@ -14,16 +14,16 @@ RUN apt-get update && apt-get install -y \
 COPY ./nginx.conf /etc/nginx/nginx.conf
 
 # Définir le répertoire de travail
-WORKDIR /var/www/html
+#WORKDIR /var/www/html
 
 # Copier les fichiers de l'application
 COPY . .
 
 # Créer les répertoires nécessaires
-RUN mkdir -p var public
+#RUN mkdir -p var public
 
 # Donner les permissions appropriées
-RUN chown -R www-data:www-data var public
+#RUN chown -R www-data:www-data var public
 
 # Exposer le port pour Nginx
 EXPOSE 80
