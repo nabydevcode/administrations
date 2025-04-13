@@ -7,7 +7,7 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - .:/var/www/html/appt-cmr
+      - .:/app
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - php
@@ -16,7 +16,7 @@ services:
     build:
       context: .
     volumes:
-      - .:/var/www/html/appt-cmr
+      - .:/app
 
   database:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
