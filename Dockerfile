@@ -20,7 +20,7 @@ WORKDIR /var/www/html
 COPY . .
 
 # Créer les répertoires nécessaires
-#RUN mkdir -p var public
+RUN mkdir -p var public
 
 # Donner les permissions appropriées
 RUN chown -R www-data:www-data var public
