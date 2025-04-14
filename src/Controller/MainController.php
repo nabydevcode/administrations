@@ -117,7 +117,7 @@ class MainController extends AbstractController
     /*  la fonction pour generer  le pdf a imprimer   */
 
 
-    #[Route('/shipment/print/cmr/{id}', name: 'shipment_pdf', methods: ['GET', 'POST'])]
+    #[Route('/shipment/print/cmr/{id}', name: 'shipment_pdf')]
 
     public function generatePdf(Shipment $shipment): Response
     {
@@ -129,12 +129,21 @@ class MainController extends AbstractController
         $filePath = $this->getParameter('kernel.project_dir') . '/public/shipment_' . $shipment->getId() . '.pdf';
 
         // Générer le PDF en passant le cookie
+        /* Browsershot::url($url)
+            ->setNodeBinary('/usr/bin/node')
+            ->setNpmBinary('/usr/bin/npm')
+            ->waitUntilNetworkIdle()
+            ->format('A4')
+            ->save($filePath); */
         Browsershot::url($url)
-            ->setNodeBinary('/usr/local/bin/node')
-            ->setNpmBinary('/usr/local/bin/npm')
+            ->setNodeBinary('/usr/homebrew//bin/node')
+            ->setNpmBinary('/opt/homebrew/bin/npm')
             ->waitUntilNetworkIdle()
             ->format('A4')
             ->save($filePath);
+
+
+
 
 
         $this->addFlash('success', "votre CMR a ete creer avec success ");
@@ -150,66 +159,5 @@ class MainController extends AbstractController
         return $this->render('main/cmr.html.twig', ['shipment' => $shipment]);
     }
 
-    /* #[Route('/shipment/resultat/{ref}', name: 'shipment_resultat')]
-    public function search(Request $request, EntityManagerInterface $em): Response
-    {
-        // Récupérer le paramètre ref depuis l'URL
-        $ref = $request->attributes->get('ref');
 
-        var_dump($ref);
-
-        // Vérifier si la référence est présente
-        if (!$ref) {
-            $this->addFlash('error', "Veuillez entrer un numéro de référence.");
-            return $this->render('main/recherche.html.twig');
-        }
-
-        // Recherche du Shipment dans la base de données
-        $shipmentRepository = $em->getRepository(Shipment::class);
-        $shipment = $shipmentRepository->findOneBy(['numberReference' => $ref]);
-
-        // Vérification du résultat
-        if ($shipment) {
-            $this->addFlash('success', "CMR trouvé avec succès !");
-        } else {
-            $this->addFlash('error', "Ce numéro de référence ne correspond à aucun CMR dans la base de données.");
-        }
-
-        // Rendu du template avec le résultat
-        return $this->render('main/search.html.twig', ['shipment' => $shipment]);
-    } */
-
-    /* #[Route('/shipment/recherche', name: 'shipment_recherche')]
-    public function recherche(Request $request, EntityManagerInterface $em): Response
-    {
-        $form = $this->createForm(RechercheType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $ref = $data['ref'];
-
-            // Recherche en base de données
-            $shipment = $em->getRepository(Shipment::class)->findOneBy(['numberReference' => $ref]);
-
-            var_dump($shipment);
-
-            if (!$shipment) {
-                $this->addFlash('error', "Ce numéro de référence ne correspond à aucun CMR.");
-                return $this->redirectToRoute('shipment_recherche');
-            }
-
-            return $this->render('main/search.html.twig', ['shipment' => $shipment]);
-        }
-
-        return $this->render('main/recherche.html.twig', [
-            'form' => $form->createView()
-        ]);
-    } */
-
-    /* #[Route('/shipment/recherche', name: 'shipment_recherche')]
-    public function recherche(): Response
-    {
-        return $this->render('main/recherche.html.twig');
-    } */
 }

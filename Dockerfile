@@ -19,6 +19,10 @@ WORKDIR /var/www/html
 # Copier les fichiers de l'application
 COPY . .
 
+# Installer Node.js (version 18) et npm via NodeSource
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs
+
 # Créer les répertoires nécessaires
 RUN mkdir -p var public
 
@@ -30,3 +34,4 @@ EXPOSE 80
 
 # Lancer PHP-FPM et Nginx
 CMD ["sh", "-c", "php-fpm -D && nginx -g 'daemon off;'"]
+
